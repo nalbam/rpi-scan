@@ -1,0 +1,27 @@
+{
+  "name": "wifi-spi",
+  "version": "0.0.1",
+  "description": "Node.js wifi spi",
+  "main": "app.js",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "moment-timezone": "^0.5.14"
+  },
+  "engine": {
+    "node": "*",
+    "npm": "*"
+  },
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/nalbam/wifi-spi.git"
+  },
+  "author": "Jungyoul Yu <me@nalbam.com>",
+  "bugs": {
+    "url": "http://github.com/nalbam/wifi-spi/issues"
+  },
+  "homepage": "http://github.com/nalbam/wifi-spi"
+}
