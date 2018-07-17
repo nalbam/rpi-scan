@@ -16,15 +16,15 @@ let job = new CronJob({
     onTick: function() {
         console.log('job start.');
 
-        let scan = exec('sudo arp-scan -l | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}"');
+        let scan = exec('sudo arp-scan -l | grep -E "([0-9]{1,3}\\.){3}[0-9]{1,3}"');
 
         scan.stdout.on('data', data => {
             // console.log(`${data}`);
 
-            let arr = data.split("\n");
+            let arr = data.split('\n');
 
             arr.forEach(function (item) {
-                let a = item.split("\t");
+                let a = item.split('\t');
 
                 if (a && a[0]) {
                     let obj = {
