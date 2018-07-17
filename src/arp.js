@@ -3,40 +3,38 @@
 const exec = require('child_process').exec;
 const CronJob = require('cron').CronJob;
 
-const token = process.env.LOGZIO_TOKEN || '';
+const token = process.env.LOGZIO_TOKEN || 'EMPTY_TOKEN';
+const type = process.env.LOGZIO_TYPE || 'demo';
 
 const logger = require('logzio-nodejs').createLogger({
     token: `${token}`,
-    host: 'listener.logz.io',
-    type: 'demo'     // OPTIONAL (If none is set, it will be 'nodejs')
+    type: `${type}`
 });
 
-var job = new CronJob({
+let job = new CronJob({
     cronTime: '0 * * * * *',
     onTick: function() {
         console.log('job start.');
 
-        const arp = exec('sudo arp-scan -l | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}"');
+        let scan = exec('sudo arp-scan -l | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}"');
 
-        arp.stdout.on('data', data => {
+        scan.stdout.on('data', data => {
             // console.log(`${data}`);
 
-            var arr = data.split("\n");
+            let arr = data.split("\n");
 
             arr.forEach(function (item) {
-                var a = item.split("\t");
+                let a = item.split("\t");
 
-                if (!a || !a[0]) {
-                    continue;
+                if (a && a[0]) {
+                    let obj = {
+                        ip: a[0],
+                        mac: a[1],
+                        desc: a[2]
+                    };
+
+                    logger.log(obj);
                 }
-
-                var obj = {
-                    ip: a[0],
-                    mac: a[1],
-                    desc: a[2]
-                };
-
-                logger.log(obj);
 
                 // console.log(`${item}`);
             });
@@ -44,18 +42,18 @@ var job = new CronJob({
             console.log('done.');
         });
 
-        arp.stderr.on('data', data => {
+        scan.stderr.on('data', data => {
             console.log(`Error: ${data}`);
         });
 
-        arp.on('close', code => {
-            // console.log(`child process exited with code: ${code}`);
+        scan.on('close', code => {
+            console.log(`child process exited with code: ${code}`);
         });
     },
     start: false,
     timeZone: 'Asia/Seoul'
 });
 
-if (token) {
+if (token !== 'EMPTY_TOKEN') {
     job.start();
 }
