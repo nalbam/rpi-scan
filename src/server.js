@@ -1,5 +1,5 @@
-let os = require('os'),
-    moment = require("moment-timezone"),
+const os = require('os'),
+    moment = require('moment-timezone'),
     express = require('express');
 
 const app = express();
@@ -8,7 +8,7 @@ app.use('/favicon.ico', express.static('views/favicon.ico'));
 
 app.get('/', function (req, res) {
     let host = os.hostname();
-    let date = moment().tz("Asia/Seoul").format();
+    let date = moment().tz('Asia/Seoul').format();
     res.render('index.ejs', {host: host, date: date, ip: req.ip});
 });
 
