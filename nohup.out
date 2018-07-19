@@ -1,0 +1,10 @@
+internal/modules/cjs/loader.js:583
+    throw err;
+    ^
+
+Error: Cannot find module '/home/nalbam/work/src/github.com/nalbam/wifi-spi/server.js'
+    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:581:15)
+    at Function.Module._load (internal/modules/cjs/loader.js:507:25)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:742:12)
+    at startup (internal/bootstrap/node.js:266:19)
+    at bootstrapNodeJSCore (internal/bootstrap/node.js:596:3)
