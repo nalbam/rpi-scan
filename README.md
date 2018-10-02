@@ -9,8 +9,7 @@ npm install --save cron ejs express moment-timezone
 ## start
 
 ```bash
-export API=http://api-url
-export TOKEN=STRING
+export HOST=api.nalbam.com
 
 ./run.sh
 ```

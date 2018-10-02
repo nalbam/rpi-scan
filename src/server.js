@@ -1,13 +1,13 @@
 const os = require('os'),
     ip = require('ip'),
     moment = require('moment-timezone'),
-    express = require('express');
+    express = require('express'),
+    http = require('http');
 
 const exec = require('child_process').exec;
 const CronJob = require('cron').CronJob;
 
-const api = process.env.API || 'http://localhost:3000';
-const token = process.env.TOKEN || 'EMPTY_TOKEN';
+const host = process.env.HOST || 'localhost';
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -27,6 +27,7 @@ const job = new CronJob({
     cronTime: '0 * * * * *',
     onTick: function() {
         console.log('scan start.');
+
         const scan = exec('sudo arp-scan -l | grep -E "([0-9]{1,3}\\.){3}[0-9]{1,3}"');
         scan.stdout.on('data', data => {
             // console.log(`${data}`);
@@ -34,7 +35,32 @@ const job = new CronJob({
                 const arr = item.split('\t');
                 if (arr && arr[0]) {
                     // TODO call api
-                    console.log(`call: ${api}`);
+                    console.log(`call: ${host}`);
+
+                    var body = JSON.stringify({
+                        ip: arr[0],
+                        mac: arr[1],
+                        desc: arr[2]
+                    });
+
+                    console.log(`body: ${body}`);
+
+                    var request = new http.ClientRequest({
+                        hostname: `${host}`,
+                        port: 80,
+                        path: '/wifi',
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Content-Length': Buffer.byteLength(body)
+                        }
+                    });
+
+                    request.on('error', function(err) {
+                        console.log(err);
+                    });
+
+                    request.end(body);
                 }
                 // console.log(`${item}`);
             });
@@ -49,6 +75,6 @@ const job = new CronJob({
     timeZone: 'Asia/Seoul'
 });
 
-if (token !== 'EMPTY_TOKEN') {
+if (host !== 'localhost') {
     job.start();
 }
