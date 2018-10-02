@@ -9,5 +9,8 @@ npm install --save cron ejs express moment-timezone
 ## start
 
 ```bash
-LOGZIO_TYPE=TYPE node server.js
+export API=http://api-url
+export TOKEN=STRING
+
+./run.sh
 ```
