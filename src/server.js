@@ -6,10 +6,8 @@ const os = require('os'),
 const exec = require('child_process').exec;
 const CronJob = require('cron').CronJob;
 
-const token = process.env.LOGZIO_TOKEN || 'EMPTY_TOKEN';
-const type = process.env.LOGZIO_TYPE || 'demo';
-
-const logger = require('logzio-nodejs').createLogger({token: `${token}`, type: `${type}`});
+const api = process.env.API || 'http://localhost:3000';
+const token = process.env.TOKEN || 'EMPTY_TOKEN';
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -35,7 +33,8 @@ const job = new CronJob({
             data.split('\n').forEach(function (item) {
                 const arr = item.split('\t');
                 if (arr && arr[0]) {
-                    logger.log({ip: arr[0], mac: arr[1], desc: arr[2]});
+                    // TODO call api
+                    console.log(`call: ${api}`);
                 }
                 // console.log(`${item}`);
             });

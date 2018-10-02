@@ -1,6 +1,6 @@
 # Dockerfile
 
-FROM node:latest
+FROM node:slim
 
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -9,8 +9,8 @@ EXPOSE 3000
 
 ADD src /data
 
-WORKDIR data
+WORKDIR /data
 
-RUN npm install -s
+RUN npm run build
 
 CMD ["node", "server.js"]

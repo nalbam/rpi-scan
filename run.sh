@@ -8,6 +8,6 @@ git pull
 
 cd ${SHELL_DIR}/src
 
-npm install
+npm run build
 
 node server.js &

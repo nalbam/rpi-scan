@@ -3,11 +3,11 @@
 ## npm install
 
 ```bash
-npm install --save cron ejs express logzio-nodejs moment-timezone
+npm install --save cron ejs express moment-timezone
 ```
 
 ## start
 
 ```bash
-LOGZIO_TOKEN=TOKEN LOGZIO_TYPE=TYPE node server.js
+LOGZIO_TYPE=TYPE node server.js
 ```
