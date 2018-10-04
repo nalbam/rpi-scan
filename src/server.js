@@ -7,7 +7,7 @@ const os = require('os'),
 const exec = require('child_process').exec;
 const CronJob = require('cron').CronJob;
 
-const host = process.env.HOST || 'localhost';
+const host = process.env.LAMBDA_HOST || 'localhost';
 
 const app = express();
 app.set('view engine', 'ejs');
