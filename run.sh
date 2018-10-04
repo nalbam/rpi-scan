@@ -33,8 +33,6 @@ if [ ! -z ${ANSWER} ]; then
     echo "LAMBDA_HOST=${LAMBDA_HOST}" > ${CONFIG}
 fi
 
-sudo apt install -y node
-
 pushd ${SHELL_DIR}
 git pull
 popd
