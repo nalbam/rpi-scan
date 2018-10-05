@@ -35,13 +35,13 @@ fi
 
 export LAMBDA_HOST="${LAMBDA_HOST}"
 
-pushd ${SHELL_DIR}
-git pull
-popd
+# pushd ${SHELL_DIR}
+# git pull
+# popd
 
-pushd ${SHELL_DIR}/src
-npm run build
-popd
+# pushd ${SHELL_DIR}/src
+# npm run build
+# popd
 
 cd ${SHELL_DIR}/src/
 nohup node server.js &
