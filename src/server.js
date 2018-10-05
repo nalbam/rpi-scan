@@ -30,7 +30,6 @@ const job = new CronJob({
 
         const scan = exec('sudo arp-scan -l | grep -E "([0-9]{1,3}\\.){3}[0-9]{1,3}"');
         scan.stdout.on('data', data => {
-            // console.log(`${data}`);
             console.log(`call: ${lambda}`);
 
             data.split('\n').forEach(function (item) {
@@ -55,9 +54,8 @@ const job = new CronJob({
                         console.log(body);
                     });
                 }
-                // console.log(`${item}`);
             });
-            // console.log('scan done.');
+            console.log('scan done.');
         });
 
         scan.stderr.on('data', data => {
