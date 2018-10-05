@@ -29,7 +29,7 @@ if [ -z ${LAMBDA_HOST} ]; then
 
     if [ ! -z ${ANSWER} ]; then
         LAMBDA_HOST="${ANSWER}"
-        echo "LAMBDA_HOST=${LAMBDA_HOST}" > ${CONFIG}
+        echo "export LAMBDA_HOST=${LAMBDA_HOST}" > ${CONFIG}
     fi
 fi
 
