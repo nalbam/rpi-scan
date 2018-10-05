@@ -24,7 +24,7 @@ app.listen(3000, function () {
 });
 
 const job = new CronJob({
-    cronTime: '0 * * * * *',
+    cronTime: '0 */10 * * * *',
     onTick: function() {
         console.log('scan start.');
 
