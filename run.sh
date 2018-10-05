@@ -24,16 +24,16 @@ CONFIG=~/.wifi-spi
 touch ${CONFIG}
 . ${CONFIG}
 
-if [ -z ${LAMBDA_HOST} ]; then
-    _read "LAMBDA_HOST [${LAMBDA_HOST}] : "
+if [ -z ${LAMBDA_API} ]; then
+    _read "LAMBDA_API [${LAMBDA_API}] : "
 
     if [ ! -z ${ANSWER} ]; then
-        LAMBDA_HOST="${ANSWER}"
-        echo "export LAMBDA_HOST=${LAMBDA_HOST}" > ${CONFIG}
+        LAMBDA_API="${ANSWER}"
+        echo "export LAMBDA_API=${LAMBDA_API}" > ${CONFIG}
     fi
 fi
 
-export LAMBDA_HOST="${LAMBDA_HOST}"
+export LAMBDA_API="${LAMBDA_API}"
 
 # pushd ${SHELL_DIR}
 # git pull

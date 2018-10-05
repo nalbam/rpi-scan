@@ -2,12 +2,12 @@ const os = require('os'),
     ip = require('ip'),
     moment = require('moment-timezone'),
     express = require('express'),
-    http = require('http');
+    request = require('request');
 
 const exec = require('child_process').exec;
 const CronJob = require('cron').CronJob;
 
-const host = process.env.LAMBDA_HOST || 'localhost';
+const lambda = process.env.LAMBDA_API || '';
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -31,36 +31,29 @@ const job = new CronJob({
         const scan = exec('sudo arp-scan -l | grep -E "([0-9]{1,3}\\.){3}[0-9]{1,3}"');
         scan.stdout.on('data', data => {
             // console.log(`${data}`);
+            console.log(`call: ${lambda}`);
+
             data.split('\n').forEach(function (item) {
                 const arr = item.split('\t');
+
                 if (arr && arr[0]) {
-                    // TODO call api
-                    console.log(`call: ${host}`);
+                    console.log(`body: ${arr[1]} ${arr[0]} ${arr[2]}`);
 
-                    var body = JSON.stringify({
-                        ip: arr[0],
-                        mac: arr[1],
-                        desc: arr[2]
-                    });
-
-                    console.log(`body: ${body}`);
-
-                    var request = new http.ClientRequest({
-                        hostname: `${host}`,
-                        port: 80,
-                        path: '/wifi',
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Content-Length': Buffer.byteLength(body)
+                    // call lambda api
+                    request.post(`${lambda}`, {
+                        json: {
+                            ip: arr[0],
+                            mac: arr[1],
+                            desc: arr[2]
                         }
+                    }, (error, res, body) => {
+                        if (error) {
+                            console.error(error);
+                            return;
+                        }
+                        console.log(`statusCode: ${res.statusCode}`);
+                        console.log(body);
                     });
-
-                    request.on('error', function(err) {
-                        console.log(err);
-                    });
-
-                    request.end(body);
                 }
                 // console.log(`${item}`);
             });
@@ -75,6 +68,6 @@ const job = new CronJob({
     timeZone: 'Asia/Seoul'
 });
 
-if (host !== 'localhost') {
+if (!lambda) {
     job.start();
 }
