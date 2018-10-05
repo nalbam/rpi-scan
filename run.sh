@@ -44,4 +44,5 @@ export LAMBDA_API="${LAMBDA_API}"
 # popd
 
 cd ${SHELL_DIR}/src/
+rm -rf nohup.out
 nohup node server.js &
