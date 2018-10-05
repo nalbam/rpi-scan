@@ -43,4 +43,5 @@ popd
 
 export LAMBDA_HOST="${LAMBDA_HOST}"
 
-node ${SHELL_DIR}/src/server.js &
+cd ${SHELL_DIR}/src/
+node server.js &
