@@ -26,12 +26,16 @@ CONFIG="${SHELL_DIR}/target/config"
 touch ${CONFIG}
 . ${CONFIG}
 
-_read "LAMBDA_HOST [${LAMBDA_HOST}] : "
+if [ -z ${LAMBDA_HOST} ]; then
+    _read "LAMBDA_HOST [${LAMBDA_HOST}] : "
 
-if [ ! -z ${ANSWER} ]; then
-    LAMBDA_HOST="${ANSWER}"
-    echo "LAMBDA_HOST=${LAMBDA_HOST}" > ${CONFIG}
+    if [ ! -z ${ANSWER} ]; then
+        LAMBDA_HOST="${ANSWER}"
+        echo "LAMBDA_HOST=${LAMBDA_HOST}" > ${CONFIG}
+    fi
 fi
+
+export LAMBDA_HOST="${LAMBDA_HOST}"
 
 pushd ${SHELL_DIR}
 git pull
@@ -40,8 +44,6 @@ popd
 pushd ${SHELL_DIR}/src
 npm run build
 popd
-
-export LAMBDA_HOST="${LAMBDA_HOST}"
 
 cd ${SHELL_DIR}/src/
 node server.js &
