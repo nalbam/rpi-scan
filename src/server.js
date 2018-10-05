@@ -68,6 +68,6 @@ const job = new CronJob({
     timeZone: 'Asia/Seoul'
 });
 
-if (!lambda) {
+if (lambda) {
     job.start();
 }
