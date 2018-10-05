@@ -43,6 +43,11 @@ export LAMBDA_API="${LAMBDA_API}"
 # npm run build
 # popd
 
+PID=$(ps -ef | grep node | grep server[.]js | head -1 | awk '{print $2}' | xargs)
+if [ ! -z {PID} ]; then
+    kill -9 ${PID}
+fi
+
 cd ${SHELL_DIR}/src/
 rm -rf nohup.out
 nohup node server.js &
