@@ -20,7 +20,7 @@ _read() {
     fi
 }
 
-CONFIG="~/.wifi-spi"
+CONFIG=~/.wifi-spi
 touch ${CONFIG}
 . ${CONFIG}
 
