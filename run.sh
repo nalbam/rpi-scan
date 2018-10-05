@@ -20,9 +20,7 @@ _read() {
     fi
 }
 
-mkdir -p ${SHELL_DIR}/target
-
-CONFIG="${SHELL_DIR}/target/config"
+CONFIG="~/.wifi-spi"
 touch ${CONFIG}
 . ${CONFIG}
 
@@ -46,4 +44,4 @@ npm run build
 popd
 
 cd ${SHELL_DIR}/src/
-node server.js &
+nohup node server.js &
