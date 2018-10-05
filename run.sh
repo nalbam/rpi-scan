@@ -20,6 +20,24 @@ _read() {
     fi
 }
 
+_result() {
+    _echo "# $@" 4
+}
+
+_command() {
+    _echo "$ $@" 3
+}
+
+_success() {
+    _echo "+ $@" 2
+    exit 0
+}
+
+_error() {
+    _echo "- $@" 1
+    exit 1
+}
+
 CONFIG=~/.wifi-spi
 touch ${CONFIG}
 . ${CONFIG}
@@ -33,6 +51,7 @@ if [ -z ${LAMBDA_API} ]; then
     fi
 fi
 
+_result "LAMBDA_API: ${LAMBDA_API}"
 export LAMBDA_API="${LAMBDA_API}"
 
 # pushd ${SHELL_DIR}
@@ -45,9 +64,12 @@ export LAMBDA_API="${LAMBDA_API}"
 
 PID=$(ps -ef | grep node | grep server[.]js | head -1 | awk '{print $2}' | xargs)
 if [ ! -z {PID} ]; then
+    _command "kill -9 ${PID}"
     kill -9 ${PID}
 fi
 
 cd ${SHELL_DIR}/src/
 rm -rf nohup.out
+
+_command "nohup node server.js &"
 nohup node server.js &
