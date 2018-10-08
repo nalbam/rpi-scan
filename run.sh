@@ -2,6 +2,8 @@
 
 SHELL_DIR=$(dirname $0)
 
+CMD=$1
+
 command -v tput > /dev/null || TPUT=false
 
 _echo() {
@@ -68,13 +70,15 @@ if [ "${PID}" != "" ]; then
     kill -9 ${PID}
 fi
 
-cd ${SHELL_DIR}/src/
-rm -rf nohup.out
+if [ -z ${CMD}] || [ "${CMD}" == "start" ]; then
+    cd ${SHELL_DIR}/src/
+    rm -rf nohup.out
 
-_command "nohup node server.js &"
-nohup node server.js &
+    _command "nohup node server.js &"
+    nohup node server.js &
 
-PID=$(ps -ef | grep node | grep server[.]js | head -1 | awk '{print $2}' | xargs)
-if [ "{PID}" != "" ]; then
-    _result "wifi-spi started: ${PID}"
+    PID=$(ps -ef | grep node | grep server[.]js | head -1 | awk '{print $2}' | xargs)
+    if [ "{PID}" != "" ]; then
+        _result "wifi-spi started: ${PID}"
+    fi
 fi

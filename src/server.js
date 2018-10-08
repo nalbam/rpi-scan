@@ -28,15 +28,15 @@ const job = new CronJob({
     onTick: function() {
         console.log('scan start.');
 
-        // // call get lambda api
-        // request.get(`${lambda}`, (error, res, body) => {
-        //     if (error) {
-        //         console.error(error);
-        //         return;
-        //     }
-        //     console.log(`statusCode: ${res.statusCode}`);
-        //     console.log(body);
-        // });
+        // call get lambda api
+        request.get(`${lambda}`, (error, res, body) => {
+            if (error) {
+                console.error(error);
+                return;
+            }
+            console.log(`statusCode: ${res.statusCode}`);
+            console.log(body);
+        });
 
         const scan = exec('sudo arp-scan -l | grep -E "([0-9]{1,3}\\.){3}[0-9]{1,3}"');
         scan.stdout.on('data', data => {
