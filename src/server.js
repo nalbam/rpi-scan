@@ -40,21 +40,26 @@ const job = new CronJob({
                 if (arr && arr[0]) {
                     console.log(`body: ${arr[1]} ${arr[0]} ${arr[2]}`);
 
+                    const json = {
+                        ip: arr[0],
+                        mac: arr[1],
+                        desc: arr[2],
+                        beacon: lambda_key
+                    };
+
                     // post lambda api
                     request.post(`${lambda_api}`, {
-                        json: {
-                            ip: arr[0],
-                            mac: arr[1],
-                            desc: arr[2],
-                            beacon: lambda_key
-                        }
+                        json: json
                     }, (error, res, body) => {
                         if (error) {
                             console.error(error);
                             return;
                         }
                         console.log(`statusCode: ${res.statusCode}`);
-                        console.log(body);
+                        if (res.statusCode !== 200) {
+                            console.error(JSON.stringify(json));
+                            console.error(JSON.stringify(body));
+                        }
                     });
                 }
             });
@@ -63,7 +68,7 @@ const job = new CronJob({
         });
 
         scan.stderr.on('data', data => {
-            console.log(`Error: ${data}`);
+            console.error(`Error: ${data}`);
         });
     },
     start: false,
