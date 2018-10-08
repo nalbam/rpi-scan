@@ -4,6 +4,10 @@ SHELL_DIR=$(dirname $0)
 
 CMD=$1
 
+CONFIG=~/.wifi-spi
+touch ${CONFIG}
+. ${CONFIG}
+
 command -v tput > /dev/null || TPUT=false
 
 _echo() {
@@ -40,9 +44,48 @@ _error() {
     exit 1
 }
 
-CONFIG=~/.wifi-spi
-touch ${CONFIG}
-. ${CONFIG}
+_stop() {
+    PID=$(ps -ef | grep node | grep server[.]js | head -1 | awk '{print $2}' | xargs)
+    if [ "${PID}" != "" ]; then
+        _command "kill -9 ${PID}"
+        kill -9 ${PID}
+    fi
+}
+
+_start() {
+    cd ${SHELL_DIR}/src/
+    rm -rf nohup.out
+
+    _command "nohup node server.js &"
+    nohup node server.js &
+
+    PID=$(ps -ef | grep node | grep server[.]js | head -1 | awk '{print $2}' | xargs)
+    if [ "{PID}" != "" ]; then
+        _result "wifi-spi started: ${PID}"
+    fi
+}
+
+_config_read() {
+    KEY=$1
+    VAL=$2
+
+    if [ -z ${VAL} ]; then
+        _read "${KEY} [${VAL}] : "
+
+        if [ ! -z ${ANSWER} ]; then
+            echo "export ${KEY}=${VAL}" >> ${CONFIG}
+        fi
+    fi
+
+    _config_save
+}
+
+_config_save() {
+    echo "# wifi-spi config" > ${CONFIG}
+    echo "export LAMBDA_ID=${LAMBDA_ID}" >> ${CONFIG}
+    echo "export LAMBDA_API=${LAMBDA_API}" >> ${CONFIG}
+    . ${CONFIG}
+}
 
 if [ -z ${LAMBDA_API} ]; then
     _read "LAMBDA_API [${LAMBDA_API}] : "
@@ -64,21 +107,11 @@ export LAMBDA_API="${LAMBDA_API}"
 # npm run build
 # popd
 
-PID=$(ps -ef | grep node | grep server[.]js | head -1 | awk '{print $2}' | xargs)
-if [ "${PID}" != "" ]; then
-    _command "kill -9 ${PID}"
-    kill -9 ${PID}
-fi
+_stop
 
 if [ -z ${CMD} ] || [ "${CMD}" == "start" ]; then
-    cd ${SHELL_DIR}/src/
-    rm -rf nohup.out
+    _config_read "LAMBDA_ID" "${LAMBDA_ID}"
+    _config_read "LAMBDA_API" "${LAMBDA_API}"
 
-    _command "nohup node server.js &"
-    nohup node server.js &
-
-    PID=$(ps -ef | grep node | grep server[.]js | head -1 | awk '{print $2}' | xargs)
-    if [ "{PID}" != "" ]; then
-        _result "wifi-spi started: ${PID}"
-    fi
+    _start
 fi
