@@ -55,7 +55,7 @@ const job = new CronJob({
                             console.error(error);
                             return;
                         }
-                        console.log(`statusCode: ${res.statusCode}`);
+                        console.log(`${arr[1]}: ${res.statusCode}`);
                         if (res.statusCode !== 200) {
                             console.error(JSON.stringify(json));
                             console.error(JSON.stringify(body));
