@@ -9,6 +9,7 @@ const CronJob = require('cron').CronJob;
 
 const scan_shell = process.env.SCAN_SHELL || '';
 const lambda_api = process.env.LAMBDA_API || '';
+const lambda_key = process.env.LAMBDA_KEY || '';
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -39,12 +40,13 @@ const job = new CronJob({
                 if (arr && arr[0]) {
                     console.log(`body: ${arr[1]} ${arr[0]} ${arr[2]}`);
 
-                    // call post lambda api
+                    // post lambda api
                     request.post(`${lambda_api}`, {
                         json: {
                             ip: arr[0],
                             mac: arr[1],
-                            desc: arr[2]
+                            desc: arr[2],
+                            key: lambda_key
                         }
                     }, (error, res, body) => {
                         if (error) {
