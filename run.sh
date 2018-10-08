@@ -63,7 +63,7 @@ export LAMBDA_API="${LAMBDA_API}"
 # popd
 
 PID=$(ps -ef | grep node | grep server[.]js | head -1 | awk '{print $2}' | xargs)
-if [ "{PID}" != "" ]; then
+if [ "${PID}" != "" ]; then
     _command "kill -9 ${PID}"
     kill -9 ${PID}
 fi
