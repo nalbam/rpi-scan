@@ -38,7 +38,7 @@ const job = new CronJob({
                 const arr = item.split('\t');
 
                 if (arr && arr[0]) {
-                    console.log(`body: ${arr[1]} ${arr[0]} ${arr[2]}`);
+                    console.log(`data: ${data}`);
 
                     const json = {
                         ip: arr[0],
@@ -55,7 +55,7 @@ const job = new CronJob({
                             console.error(error);
                             return;
                         }
-                        console.log(`${arr[1]}: ${res.statusCode}`);
+                        console.log(`code: ${res.statusCode}`);
                         if (res.statusCode !== 200) {
                             console.error(JSON.stringify(json));
                             console.error(JSON.stringify(body));
