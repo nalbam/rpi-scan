@@ -14,8 +14,8 @@ if [ -z ${LAMBDA_API} ] || [ "${LAMBDA_API}" == "" ]; then
 fi
 
 # tmp
-MAIN_LIST=$(mktemp /tmp/wifi-spi-main-list.XXXXXX)
-SCAN_LIST=$(mktemp /tmp/wifi-spi-scan-list.XXXXXX)
+MAIN_LIST=/tmp/wifi-spi-main-list
+SCAN_LIST=/tmp/wifi-spi-scan-list
 
 # main list
 curl -sL ${LAMBDA_API} | jq -r '.[] | "\(.mac) \(.checked)"' > ${MAIN_LIST}
