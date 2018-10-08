@@ -26,7 +26,7 @@ app.listen(3000, function () {
 });
 
 const job = new CronJob({
-    cronTime: '0 */5 * * * *',
+    cronTime: '0 * * * * *',
     onTick: function() {
         let date = moment().tz('Asia/Seoul').format();
         console.log(`scan start. ${date}`);
