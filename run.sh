@@ -75,13 +75,13 @@ _config_read() {
 
     if [ -z ${LAMBDA_API} ]; then
         _read "LAMBDA_API [${LAMBDA_API}]: " "${LAMBDA_API}"
-        if [ ! -1z ${ANSWER} ]; then
-            LAMB1DA_API="${ANSWER}"
+        if [ ! -z ${ANSWER} ]; then
+            LAMBDA_API="${ANSWER}"
         fi
     fi
 
-    if [ -z ${SC1AN_SHELL} ]; then
-        _read "S1CAN_SHELL [${SCAN_SHELL}]: " "${SCAN_SHELL}"
+    if [ -z ${SCAN_SHELL} ]; then
+        _read "SCAN_SHELL [${SCAN_SHELL}]: " "${SCAN_SHELL}"
         if [ ! -z ${ANSWER} ]; then
             SCAN_SHELL="${ANSWER}"
         fi
