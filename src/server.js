@@ -1,6 +1,6 @@
 const os = require('os'),
     ip = require('ip'),
-    moment = require('moment-timezone'),
+    moment = require('moment'),
     express = require('express'),
     request = require('request');
 
@@ -28,7 +28,8 @@ app.listen(3000, function () {
 const job = new CronJob({
     cronTime: '0 */5 * * * *',
     onTick: function() {
-        console.log('scan start.');
+        let date = moment().tz('Asia/Seoul').format();
+        console.log(`scan start. ${date}`);
 
         const scan = exec(`${scan_shell}`);
         scan.stdout.on('data', data => {
