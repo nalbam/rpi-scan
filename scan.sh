@@ -28,7 +28,7 @@ while read VAR; do
 
     MAC="${ARR[1]}"
 
-    CHECKED=$(cat ${MAIN_LIST} | grep ${MAC} | awk {'print $1'})
+    CHECKED=$(cat ${MAIN_LIST} | grep ${MAC} | awk {'print $2'})
 
     # POST
     if [ -z ${CHECKED} ] || [ "${CHECKED}" == "true" ]; then
