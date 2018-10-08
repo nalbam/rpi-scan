@@ -7,7 +7,8 @@ const os = require('os'),
 const exec = require('child_process').exec;
 const CronJob = require('cron').CronJob;
 
-const lambda = process.env.LAMBDA_API || '';
+const scan_shell = process.env.SCAN_SHELL || '';
+const lambda_api = process.env.LAMBDA_API || '';
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -28,19 +29,9 @@ const job = new CronJob({
     onTick: function() {
         console.log('scan start.');
 
-        // call get lambda api
-        request.get(`${lambda}`, (error, res, body) => {
-            if (error) {
-                console.error(error);
-                return;
-            }
-            console.log(`statusCode: ${res.statusCode}`);
-            console.log(body);
-        });
-
-        const scan = exec('sudo arp-scan -l | grep -E "([0-9]{1,3}\\.){3}[0-9]{1,3}"');
+        const scan = exec(`${scan_shell}`);
         scan.stdout.on('data', data => {
-            console.log(`call: ${lambda}`);
+            console.log(`call: ${lambda_api}`);
 
             data.split('\n').forEach(function (item) {
                 const arr = item.split('\t');
@@ -49,7 +40,7 @@ const job = new CronJob({
                     console.log(`body: ${arr[1]} ${arr[0]} ${arr[2]}`);
 
                     // call post lambda api
-                    request.post(`${lambda}`, {
+                    request.post(`${lambda_api}`, {
                         json: {
                             ip: arr[0],
                             mac: arr[1],
@@ -77,6 +68,6 @@ const job = new CronJob({
     timeZone: 'Asia/Seoul'
 });
 
-if (lambda) {
+if (scan_shell && lambda_api) {
     job.start();
 }

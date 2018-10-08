@@ -6,55 +6,39 @@ CONFIG=~/.wifi-spi
 touch ${CONFIG}
 . ${CONFIG}
 
-command -v tput > /dev/null || TPUT=false
-
-_echo() {
-    if [ -z ${TPUT} ] && [ ! -z $2 ]; then
-        echo -e "$(tput setaf $2)$1$(tput sgr0)"
-    else
-        echo -e "$1"
-    fi
-}
-
-_read() {
-    if [ -z ${TPUT} ]; then
-        read -p "$(tput setaf 6)$1$(tput sgr0)" ANSWER
-    else
-        read -p "$1" ANSWER
-    fi
-}
-
-_result() {
-    _echo "# $@" 4
-}
-
-_command() {
-    _echo "$ $@" 3
-}
-
-_success() {
-    _echo "+ $@" 2
-    exit 0
-}
-
-_error() {
-    _echo "- $@" 1
+if [ -z ${LAMBDA_KEY} ] || [ "${LAMBDA_KEY}" == "" ]; then
     exit 1
-}
+fi
+if [ -z ${LAMBDA_API} ] || [ "${LAMBDA_API}" == "" ]; then
+    exit 1
+fi
 
-_config_check() {
-    KEY=$1
-    VAL=$2
+# tmp
+MAIN_LIST=$(mktemp /tmp/wifi-spi-main-list.XXXXXX)
+SCAN_LIST=$(mktemp /tmp/wifi-spi-scan-list.XXXXXX)
 
-    if [ -z ${VAL} ] || [ "${VAL}" == "" ]; then
-        _error "empty ${KEY}"
+# main list
+curl -sL ${LAMBDA_API} | jq -r '.[] | "\(.mac) \(.checked)"' > ${MAIN_LIST}
+
+# scan list
+sudo arp-scan -l | grep -E "([0-9]{1,3}\\.){3}[0-9]{1,3}" > ${SCAN_LIST}
+
+while read VAR; do
+    ARR=($(echo $VAR))
+
+    IP="${ARR[0]}"
+    MAC="${ARR[1]}"
+    DESC="${ARR[0]}"
+
+    CHECKED=$(cat ${MAIN_LIST} | grep ${MAC} | awk {'print $1'})
+
+    # POST
+    if [ -z ${CHECKED} ] || [ "${CHECKED}" == "true" ]; then
+        echo "${VAR}"
+
+        # DATA="{\"ip\":\"${IP}\",\"mac\":\"${MAC}\",\"desc\":\"${DESC}\"}"
+        # curl --header "Content-Type: application/json" \
+        #      --request POST --data "${DATA}" \
+        #      -sL ${LAMBDA_API}
     fi
-}
-
-_config_check "LAMBDA_ID" "${LAMBDA_ID}"
-_config_check "LAMBDA_API" "${LAMBDA_API}"
-
-MAC_LIST=$(mktemp /tmp/wifi-spi-mac-list.XXXXXX)
-
-# mac list
-curl -sL ${LAMBDA_API} | jq -r '.[] | "\(.mac) \(.checked)"' > ${MAC_LIST}
+done < ${SCAN_LIST}

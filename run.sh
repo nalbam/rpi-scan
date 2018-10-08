@@ -66,38 +66,40 @@ _start() {
 }
 
 _config_read() {
-    KEY=$1
-    VAL=$2
-
-    if [ -z ${VAL} ]; then
-        _read "${KEY} [${VAL}] : "
-
+    if [ -z ${LAMBDA_KEY} ]; then
+        _read "LAMBDA_KEY [${LAMBDA_KEY}]: " "${LAMBDA_KEY}"
         if [ ! -z ${ANSWER} ]; then
-            echo "export ${KEY}=${VAL}" >> ${CONFIG}
+            LAMBDA_KEY="${ANSWER}"
         fi
     fi
 
-    _config_save
+    if [ -z ${LAMBDA_API} ]; then
+        _read "LAMBDA_API [${LAMBDA_API}]: " "${LAMBDA_API}"
+        if [ ! -z ${ANSWER} ]; then
+            LAMBDA_API="${ANSWER}"
+        fi
+    fi
+
+    if [ -z ${SCAN_SHELL} ]; then
+        _read "SCAN_SHELL [${SCAN_SHELL}]: " "${SCAN_SHELL}"
+        if [ ! -z ${ANSWER} ]; then
+            SCAN_SHELL="${ANSWER}"
+        fi
+    fi
+
+    export LAMBDA_KEY="${LAMBDA_KEY}"
+    export LAMBDA_API="${LAMBDA_API}"
+    export SCAN_SHELL="${SCAN_SHELL}"
 }
 
 _config_save() {
     echo "# wifi-spi config" > ${CONFIG}
-    echo "export LAMBDA_ID=${LAMBDA_ID}" >> ${CONFIG}
+    echo "export LAMBDA_KEY=${LAMBDA_KEY}" >> ${CONFIG}
     echo "export LAMBDA_API=${LAMBDA_API}" >> ${CONFIG}
-    . ${CONFIG}
+    echo "export SCAN_SHELL=${SCAN_SHELL}" >> ${CONFIG}
+
+    cat ${CONFIG}
 }
-
-if [ -z ${LAMBDA_API} ]; then
-    _read "LAMBDA_API [${LAMBDA_API}] : "
-
-    if [ ! -z ${ANSWER} ]; then
-        LAMBDA_API="${ANSWER}"
-        echo "export LAMBDA_API=${LAMBDA_API}" > ${CONFIG}
-    fi
-fi
-
-_result "LAMBDA_API: ${LAMBDA_API}"
-export LAMBDA_API="${LAMBDA_API}"
 
 # pushd ${SHELL_DIR}
 # git pull
@@ -107,11 +109,11 @@ export LAMBDA_API="${LAMBDA_API}"
 # npm run build
 # popd
 
+_config_read
+_config_save
+
 _stop
 
 if [ -z ${CMD} ] || [ "${CMD}" == "start" ]; then
-    _config_read "LAMBDA_ID" "${LAMBDA_ID}"
-    _config_read "LAMBDA_API" "${LAMBDA_API}"
-
     _start
 fi
