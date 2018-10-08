@@ -73,3 +73,8 @@ rm -rf nohup.out
 
 _command "nohup node server.js &"
 nohup node server.js &
+
+PID=$(ps -ef | grep node | grep server[.]js | head -1 | awk '{print $2}' | xargs)
+if [ "{PID}" != "" ]; then
+    _result "wifi-spi started: ${PID}"
+fi
