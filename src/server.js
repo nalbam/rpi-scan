@@ -38,7 +38,7 @@ const job = new CronJob({
                 const arr = item.split('\t');
 
                 if (arr && arr[0]) {
-                    console.log(`data: ${data}`);
+                    console.log(`data: ${arr[1]} ${arr[0]} ${arr[2]}`);
 
                     const json = {
                         ip: arr[0],
