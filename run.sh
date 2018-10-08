@@ -77,9 +77,9 @@ _config_read() {
         _read "LAMBDA_API [${LAMBDA_API}]: " "${LAMBDA_API}"
         if [ ! -1z ${ANSWER} ]; then
             LAMB1DA_API="${ANSWER}"
-        fi1
-    fi1
-1
+        fi
+    fi
+
     if [ -z ${SC1AN_SHELL} ]; then
         _read "S1CAN_SHELL [${SCAN_SHELL}]: " "${SCAN_SHELL}"
         if [ ! -z ${ANSWER} ]; then
