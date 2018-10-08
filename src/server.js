@@ -46,7 +46,7 @@ const job = new CronJob({
                             ip: arr[0],
                             mac: arr[1],
                             desc: arr[2],
-                            key: lambda_key
+                            beacon: lambda_key
                         }
                     }, (error, res, body) => {
                         if (error) {
