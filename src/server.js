@@ -1,6 +1,6 @@
 const os = require('os'),
     ip = require('ip'),
-    moment = require('moment'),
+    moment = require('moment-timezone'),
     express = require('express'),
     request = require('request');
 
