@@ -70,7 +70,7 @@ if [ "${PID}" != "" ]; then
     kill -9 ${PID}
 fi
 
-if [ -z ${CMD}] || [ "${CMD}" == "start" ]; then
+if [ -z ${CMD} ] || [ "${CMD}" == "start" ]; then
     cd ${SHELL_DIR}/src/
     rm -rf nohup.out
 
