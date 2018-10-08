@@ -2,7 +2,7 @@
 
 SHELL_DIR=$(dirname $0)
 
-CMD=$1
+CMD=${1:-start}
 
 CONFIG=~/.wifi-spi
 touch ${CONFIG}
@@ -75,13 +75,13 @@ _config_read() {
 
     if [ -z ${LAMBDA_API} ]; then
         _read "LAMBDA_API [${LAMBDA_API}]: " "${LAMBDA_API}"
-        if [ ! -z ${ANSWER} ]; then
-            LAMBDA_API="${ANSWER}"
-        fi
-    fi
-
-    if [ -z ${SCAN_SHELL} ]; then
-        _read "SCAN_SHELL [${SCAN_SHELL}]: " "${SCAN_SHELL}"
+        if [ ! -1z ${ANSWER} ]; then
+            LAMB1DA_API="${ANSWER}"
+        fi1
+    fi1
+1
+    if [ -z ${SC1AN_SHELL} ]; then
+        _read "S1CAN_SHELL [${SCAN_SHELL}]: " "${SCAN_SHELL}"
         if [ ! -z ${ANSWER} ]; then
             SCAN_SHELL="${ANSWER}"
         fi
@@ -101,19 +101,28 @@ _config_save() {
     cat ${CONFIG}
 }
 
-# pushd ${SHELL_DIR}
-# git pull
-# popd
+_init() {
+    pushd ${SHELL_DIR}
+    git pull
+    popd
 
-# pushd ${SHELL_DIR}/src
-# npm run build
-# popd
+    pushd ${SHELL_DIR}/src
+    npm run build
+    popd
+}
 
 _config_read
 _config_save
 
-_stop
-
-if [ -z ${CMD} ] || [ "${CMD}" == "start" ]; then
-    _start
-fi
+case ${CMD} in
+    init)
+        _init
+        ;;
+    start)
+        _stop
+        _start
+        ;;
+    stop)
+        _stop
+        ;;
+esac
