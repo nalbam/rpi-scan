@@ -2,7 +2,7 @@
 
 SHELL_DIR=$(dirname $0)
 
-CMD=${1:-start}
+CMD=${1:-init}
 
 CONFIG=~/.wifi-spi
 touch ${CONFIG}
@@ -116,7 +116,9 @@ _config_save
 
 case ${CMD} in
     init)
+        _stop
         _init
+        _start
         ;;
     start)
         _stop
