@@ -1,4 +1,4 @@
-# wifi-spi
+# rpi-scan
 
 ## npm install
 

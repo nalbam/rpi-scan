@@ -1,5 +1,5 @@
 {
-  "name": "wifi-spi",
+  "name": "rpi-scan",
   "version": "0.0.1",
   "description": "Node.js wifi spi",
   "main": "server.js",
@@ -21,11 +21,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/nalbam/wifi-spi.git"
+    "url": "http://github.com/nalbam/rpi-scan.git"
   },
   "author": "Jungyoul Yu <me@nalbam.com>",
   "bugs": {
-    "url": "http://github.com/nalbam/wifi-spi/issues"
+    "url": "http://github.com/nalbam/rpi-scan/issues"
   },
-  "homepage": "http://github.com/nalbam/wifi-spi"
+  "homepage": "http://github.com/nalbam/rpi-scan"
 }

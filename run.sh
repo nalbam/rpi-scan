@@ -4,7 +4,7 @@ SHELL_DIR=$(dirname $0)
 
 CMD=${1:-init}
 
-CONFIG=~/.wifi-spi
+CONFIG=~/.rpi-scan
 touch ${CONFIG}
 . ${CONFIG}
 
@@ -61,7 +61,7 @@ _start() {
 
     PID=$(ps -ef | grep node | grep server[.]js | head -1 | awk '{print $2}' | xargs)
     if [ "{PID}" != "" ]; then
-        _result "wifi-spi started: ${PID}"
+        _result "rpi-scan started: ${PID}"
     fi
 }
 
@@ -93,7 +93,7 @@ _config_read() {
 }
 
 _config_save() {
-    echo "# wifi-spi config" > ${CONFIG}
+    echo "# rpi-scan config" > ${CONFIG}
     echo "export LAMBDA_KEY=${LAMBDA_KEY}" >> ${CONFIG}
     echo "export LAMBDA_API=${LAMBDA_API}" >> ${CONFIG}
     echo "export SCAN_SHELL=${SCAN_SHELL}" >> ${CONFIG}

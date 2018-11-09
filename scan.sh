@@ -2,7 +2,7 @@
 
 SHELL_DIR=$(dirname $0)
 
-CONFIG=~/.wifi-spi
+CONFIG=~/.rpi-scan
 touch ${CONFIG}
 . ${CONFIG}
 
@@ -14,8 +14,8 @@ if [ -z ${LAMBDA_API} ] || [ "${LAMBDA_API}" == "" ]; then
 fi
 
 # tmp
-MAIN_LIST=/tmp/wifi-spi-main-list
-SCAN_LIST=/tmp/wifi-spi-scan-list
+MAIN_LIST=/tmp/rpi-scan-main-list
+SCAN_LIST=/tmp/rpi-scan-scan-list
 
 # main list
 curl -sL ${LAMBDA_API} | jq -r '.[] | "\(.mac) \(.checked)"' > ${MAIN_LIST}
