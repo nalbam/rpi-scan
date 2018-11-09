@@ -13,7 +13,7 @@ const scan_shell = process.env.SCAN_SHELL || '';
 
 const app = express();
 app.set('view engine', 'ejs');
-app.use('/favicon.ico', express.static('views/favicon.ico'));
+app.use(express.static('static'));
 
 app.get('/', function (req, res) {
     let host = os.hostname();
