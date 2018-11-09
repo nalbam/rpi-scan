@@ -3,7 +3,7 @@
 ## npm install
 
 ```bash
-npm install --save cron ejs express moment-timezone
+npm install cron ejs express ip moment-timezone request
 ```
 
 ## start
