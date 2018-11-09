@@ -7,9 +7,9 @@ const os = require('os'),
 const exec = require('child_process').exec;
 const CronJob = require('cron').CronJob;
 
-const scan_shell = process.env.SCAN_SHELL || '';
-const lambda_api = process.env.LAMBDA_API || '';
 const lambda_key = process.env.LAMBDA_KEY || '';
+const lambda_api = process.env.LAMBDA_API || '';
+const scan_shell = process.env.SCAN_SHELL || '';
 
 const app = express();
 app.set('view engine', 'ejs');
