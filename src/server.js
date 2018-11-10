@@ -6,6 +6,7 @@ const os = require('os'),
 const exec = require('child_process').exec;
 const cron = require('cron').CronJob;
 
+const port = process.env.PORT || '3000';
 const lambda_key = process.env.LAMBDA_KEY || '';
 const lambda_api = process.env.LAMBDA_API || '';
 const scan_shell = process.env.SCAN_SHELL || '';
@@ -19,8 +20,8 @@ app.get('/', function (req, res) {
     res.render('index.ejs', {host: host, server: ip.address()});
 });
 
-app.listen(3000, function () {
-    console.log('Listening on port 3000!');
+app.listen(port, function () {
+    console.log(`Listening on port ${port}!`);
 });
 
 function saveJob(data) {
