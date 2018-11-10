@@ -8,7 +8,6 @@
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "ip": "^1.1.5",
-    "moment-timezone": "^0.5.23",
     "request": "^2.88.0"
   },
   "engine": {

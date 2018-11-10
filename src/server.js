@@ -1,11 +1,10 @@
 const os = require('os'),
     ip = require('ip'),
-    moment = require('moment-timezone'),
     express = require('express'),
     request = require('request');
 
 const exec = require('child_process').exec;
-const CronJob = require('cron').CronJob;
+const cron = require('cron').CronJob;
 
 const lambda_key = process.env.LAMBDA_KEY || '';
 const lambda_api = process.env.LAMBDA_API || '';
@@ -17,65 +16,72 @@ app.use(express.static('static'));
 
 app.get('/', function (req, res) {
     let host = os.hostname();
-    let date = moment().tz('Asia/Seoul').format();
-    res.render('index.ejs', {host: host, date: date, server: ip.address(), client: req.ip.split(':').pop()});
+    res.render('index.ejs', {host: host, server: ip.address()});
 });
 
 app.listen(3000, function () {
     console.log('Listening on port 3000!');
 });
 
-const job = new CronJob({
-    cronTime: '0 * * * * *',
-    onTick: function() {
-        let date = moment().tz('Asia/Seoul').format();
-        console.log(`scan start. ${date}`);
+function saveJob(data) {
+    data.split('\n').forEach(function (item) {
+        const arr = item.split('\t');
 
-        const scan = exec(`${scan_shell}`);
-        scan.stdout.on('data', data => {
-            console.log(`call: ${lambda_api}`);
+        if (arr && arr[0]) {
+            console.log(`data: ${arr[1]} ${arr[0]} ${arr[2]}`);
 
-            data.split('\n').forEach(function (item) {
-                const arr = item.split('\t');
+            const json = {
+                ip: arr[0],
+                mac: arr[1],
+                desc: arr[2],
+                beacon: lambda_key
+            };
 
-                if (arr && arr[0]) {
-                    console.log(`data: ${arr[1]} ${arr[0]} ${arr[2]}`);
-
-                    const json = {
-                        ip: arr[0],
-                        mac: arr[1],
-                        desc: arr[2],
-                        beacon: lambda_key
-                    };
-
-                    // post lambda api
-                    request.post(`${lambda_api}`, {
-                        json: json
-                    }, (error, res, body) => {
-                        if (error) {
-                            console.error(error);
-                            return;
-                        }
-                        console.log(`code: ${res.statusCode}`);
-                        if (res.statusCode !== 200) {
-                            console.error(JSON.stringify(json));
-                            console.error(JSON.stringify(body));
-                        }
-                    });
+            // post lambda api
+            request.post(`${lambda_api}`, {
+                json: json
+            }, (error, res, body) => {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                console.log(`code: ${res.statusCode}`);
+                if (res.statusCode !== 200) {
+                    console.error(JSON.stringify(json));
+                    console.error(JSON.stringify(body));
                 }
             });
+        }
+    });
+}
 
-            console.log('scan done.');
-        });
+function scanJob() {
+    console.log(`scan start. ${date}`);
 
-        scan.stderr.on('data', data => {
-            console.error(`Error: ${data}`);
-        });
+    const scan = exec(`${scan_shell}`);
+
+    scan.stdout.on('data', data => {
+        console.log(`scanned.`);
+        saveJob(data);
+    });
+
+    scan.stderr.on('data', data => {
+        console.error(`failure.`);
+    });
+}
+
+const job = new cron({
+    cronTime: '0 * * * * *',
+    onTick: function() {
+        scanJob();
     },
     start: false,
     timeZone: 'Asia/Seoul'
 });
 
 if (scan_shell && lambda_api) {
+    console.log(`scan_shell: ${scan_shell}`);
+    console.log(`lambda_api: ${lambda_api}`);
+
     job.start();
 }
