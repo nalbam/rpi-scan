@@ -53,7 +53,8 @@ _stop() {
 }
 
 _start() {
-    cd ${SHELL_DIR}/src/
+    pushd ${SHELL_DIR}
+
     rm -rf nohup.out
 
     _command "nohup node server.js &"
@@ -63,6 +64,8 @@ _start() {
     if [ "{PID}" != "" ]; then
         _result "rpi-scan started: ${PID}"
     fi
+
+    popd
 }
 
 _config_read() {
@@ -104,9 +107,6 @@ _config_save() {
 _init() {
     pushd ${SHELL_DIR}
     git pull
-    popd
-
-    pushd ${SHELL_DIR}/src
     npm run build
     popd
 }
